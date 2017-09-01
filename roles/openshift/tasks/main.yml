@@ -1,0 +1,50 @@
+- name: Check OpenShift
+  stat:
+    path: "{{install_dir}}"
+  register: st
+
+- name: Get OpenShift Binary
+  unarchive:
+    src: "{{openshift_tgz}}"
+    dest: /tmp
+    remote_src: True
+  when: st.stat.islnk is not defined
+
+- name: Place OpenShift 
+  shell: |
+    mv /tmp/{{openshift_extract_dir}} {{install_dir}} 
+  when: st.stat.islnk is not defined
+
+- name: Check OpenShift
+  stat:
+    path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
+  register: st
+
+- block: 
+  - name: Run OpenShift Tempolary
+    shell: |
+      /opt/openshift/openshift start
+    args:
+      chdir: "{{install_dir}}"
+    async: 10
+    poll:  5
+    register: os_temp
+    ignore_errors: yes
+
+  - debug: msg="{{os_temp}}"
+
+  - name: Check OpenShift Timeout
+    async_status: jid={{ os_temp.ansible_job_id }}
+    register: job_result
+    until: job_result.finished
+    when: os_temp.failed
+    ignore_errors: yes
+
+  - name: fixed admin.kubeconfig permission
+    file:
+      path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
+      owner: root
+      group: root
+      mode: 0644
+
+  when: st.stat.islnk is not defined

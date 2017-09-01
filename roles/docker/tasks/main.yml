@@ -1,0 +1,27 @@
+- name: Disable dnsmasq
+  service: 
+    name: dnsmasq
+    enabled: no
+    state: stopped
+
+- name: config docker-network
+  template:
+    src: docker-network.j2
+    dest: /etc/sysconfig/docker-network
+    owner: root
+    group: root
+    mode: 0644
+
+- name: config docker-storage
+  copy:
+    src: docker-storage
+    dest: /etc/sysconfig/docker-storage
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Restart Docker Service
+  service:
+    name: docker
+    enabled: yes
+    state: restarted

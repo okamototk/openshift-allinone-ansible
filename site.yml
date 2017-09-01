@@ -1,0 +1,11 @@
+- name: sample
+  hosts: localhost
+  vars:
+    network:
+      dns: 8.8.8.8
+    install_dir: /opt/openshift
+    openshift_tgz: https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-server-v3.6.0-c4dd4cf-linux-64bit.tar.gz
+    openshift_extract_dir: openshift-origin-server-v3.6.0-c4dd4cf-linux-64bit
+  roles:
+  - docker
+  - openshift
