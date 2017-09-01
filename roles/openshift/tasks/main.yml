@@ -23,7 +23,7 @@
 - block: 
   - name: Run OpenShift Tempolary
     shell: |
-      /opt/openshift/openshift start
+      {{install_dir}}/openshift start --public-master=https://{{network.portal}}:8443 --master=https://localhost:8443 --dns='tcp://0.0.0.0:53'
     args:
       chdir: "{{install_dir}}"
     async: 10
@@ -48,3 +48,11 @@
       mode: 0644
 
   when: st.stat.islnk is not defined
+
+- name: firewall
+  shell: |
+    iptables -A IN_public_allow -p tcp -m tcp --dport 8443 -m conntrack --ctstate NEW -j ACCEPT 
+
+- name: Add Registry
+  shell: |
+    "{{install_dir}}/oadm registry --config={{install_dir}}/openshift.local.config/master/admin.kubeconfig --service-account=registry     --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' --selector='region=infra'
