@@ -14,7 +14,7 @@ EnvironmentFile=-/etc/sysconfig/openshift
 Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin:/opt/openshift
 ExecStart=/opt/openshift/openshift \
           start\
-          --public-master=https://${OPENSHIFT_PUBLIC_MASTER}:8443 \
+          --public-master=${OPENSHIFT_PUBLIC_MASTER} \
           --master=${OPENSHIFT_MASTER} \
           --dns=${OPENSHIFT_DNS}
 ExecReload=/bin/kill -s HUP $MAINPID

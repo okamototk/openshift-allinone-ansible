@@ -4,6 +4,19 @@
     enabled: no
     state: stopped
 
+- name: Install Docker
+  yum:
+    name: docker
+    state: latest
+
+- name: config docker
+  template:
+    src: docker.j2
+    dest: /etc/sysconfig/docker
+    owner: root
+    group: root
+    mode: 0644
+
 - name: config docker-network
   template:
     src: docker-network.j2

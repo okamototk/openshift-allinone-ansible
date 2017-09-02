@@ -3,7 +3,7 @@
   vars:
     network:
       dns: 8.8.8.8
-      portal: 13.92.254.230
+      portal: 13.90.158.166
     openshift:
       master: localhost
     install_dir: /opt/openshift

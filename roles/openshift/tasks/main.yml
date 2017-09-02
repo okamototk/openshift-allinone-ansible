@@ -1,3 +1,8 @@
+- name: Start Firewalld
+  service:
+    name: firewalld
+    state: started 
+
 - name: Check OpenShift
   stat:
     path: "{{install_dir}}"
@@ -63,7 +68,7 @@
 
 - name: Install OpenShift Systemd file 2/2
   template:
-    src: systemd/openshift
+    src: systemd/openshift.j2
     dest: /etc/sysconfig/openshift
     owner: root
     group: root
@@ -71,10 +76,9 @@
 
 - name: Start OpenShift Service
   systemd:
+    daemon-reload: yes
     name: openshift
-    damon_reload: yes
-    state: restarted 
 
-- name: Add Registry
-  shell: |
-    "{{install_dir}}/oadm registry --config={{install_dir}}/openshift.local.config/master/admin.kubeconfig --service-account=registry --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' --selector='region=infra'
+#- name: Add Registry
+#  shell: |
+#    "{{install_dir}}/oadm registry --config={{install_dir}}/openshift.local.config/master/admin.kubeconfig --service-account=registry --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' --selector='region=infra'
