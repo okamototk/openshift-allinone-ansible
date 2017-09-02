@@ -19,6 +19,10 @@ Set envirnoment (keeping them on .bash_profile is better)
     # export CURL_CA_BUNDLE=/opt/openshift/openshift.local.config/master/ca.crt
     # export PATH=/opt/openshift:${PATH}
 
+Copy config file
+
+    # cp /opt/openshift/openshift.local.config/master/admin.kubeconfig  ~/.kube/config
+
 Currently, support only root user.
 
 Run private docker registry
