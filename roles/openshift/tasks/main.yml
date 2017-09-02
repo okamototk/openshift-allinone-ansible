@@ -54,9 +54,23 @@
 
   when: st.stat.islnk is not defined
 
-- name: firewall
-  shell: |
-    iptables -A IN_public_allow -p tcp -m tcp --dport 8443 -m conntrack --ctstate NEW -j ACCEPT 
+- name: Allow portal access
+  firewalld:
+    service: 8443/tcp
+    permanent: true
+    state: enabled
+
+- name: Allow DNS access
+  firewalld:
+    service: 8053/udp
+    permanent: true
+    state: enabled
+
+- name: Allow DNS access
+  firewalld:
+    service: 53/udp
+    permanent: true
+    state: enabled
 
 - name: Install OpenShift Systemd file 1/2
   template:
