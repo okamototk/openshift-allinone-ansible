@@ -8,7 +8,7 @@ Wants=docker.service
 Type=notify
 NotifyAccess=all
 KillMode=process
-WorkingDirectory=/opt/openshift
+WorkingDirectory=/var/lib/origin
 EnvironmentFile=-/etc/sysconfig/openshift
 #Environment=DOCKER_HTTP_HOST_COMPAT=1
 Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin:/opt/openshift
