@@ -37,34 +37,32 @@
     path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
   register: st
 
-- block: 
-  - name: Run OpenShift Tempolary
-    shell: |
-      {{install_dir}}/openshift start --public-master=https://{{network.portal}}:8443 --master=https://localhost:8443 --dns='tcp://0.0.0.0:53'
-    args:
-      chdir: "{{install_dir}}"
-    async: 10
-    poll:  5
-    register: os_temp
-    ignore_errors: yes
-
-  - debug: msg="{{os_temp}}"
-
-  - name: Check OpenShift Timeout
-    async_status: jid={{ os_temp.ansible_job_id }}
-    register: job_result
-    until: job_result.finished
-    when: os_temp.failed
-    ignore_errors: yes
-
-  - name: fixed admin.kubeconfig permission
-    file:
-      path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
-      owner: root
-      group: root
-      mode: 0644
-
-  when: st.stat.islnk is not defined
+#- block: 
+#  - name: Run OpenShift Tempolary
+#    shell: |
+#      {{install_dir}}/openshift start --public-master=https://{{network.portal}}:8443 --master=https://localhost:8443 --dns='tcp://0.0.0.0:53'
+#    args:
+#      chdir: "{{install_dir}}"
+#    async: 10
+#    poll:  5
+#    register: os_temp
+#    ignore_errors: yes
+#
+#  - name: Check OpenShift Timeout
+#    async_status: jid={{ os_temp.ansible_job_id }}
+#    register: job_result
+#    until: job_result.finished
+#    when: os_temp.failed
+#    ignore_errors: yes
+#
+#  - name: fixed admin.kubeconfig permission
+#    file:
+#      path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
+#      owner: root
+#      group: root
+#      mode: 0644
+#
+#  when: st.stat.islnk is not defined
 
 - name: Allow portal access
   firewalld:
