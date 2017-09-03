@@ -72,6 +72,12 @@
     permanent: true
     state: enabled
 
+- name: Allow api access
+  firewalld:
+    port: 443/tcp
+    permanent: true
+    state: enabled
+
 - name: Allow DNS access
   firewalld:
     port: 8053/udp
