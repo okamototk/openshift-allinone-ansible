@@ -12,11 +12,13 @@ WorkingDirectory=/var/lib/origin
 EnvironmentFile=-/etc/sysconfig/openshift
 #Environment=DOCKER_HTTP_HOST_COMPAT=1
 Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin:/opt/openshift
-ExecStart=/opt/openshift/openshift \
-          start\
-          --public-master=${OPENSHIFT_PUBLIC_MASTER} \
-          --master=${OPENSHIFT_MASTER} \
-          --dns=${OPENSHIFT_DNS}
+ExecStart=/opt/openshift/oc cluster up
+ExecStop=/opt/openshift/oc cluster down
+#ExecStart=/opt/openshift/openshift \
+#          start\
+#          --public-master=${OPENSHIFT_PUBLIC_MASTER} \
+#          --master=${OPENSHIFT_MASTER} \
+#          --dns=${OPENSHIFT_DNS}
 ExecReload=/bin/kill -s HUP $MAINPID
 LimitNOFILE=1048576
 LimitNPROC=1048576
