@@ -4,17 +4,17 @@
     enabled: no
     state: stopped
 
-- name: Install Docker
+- name: Install required packages
   yum:
-    name: item
+    name: "{{item}}"
     state: latest
   with_items:
   - wget
   - git
-  - net-tool
-  - bind-util
+  - net-tools
+  - bind-utils
   - iptables-services
-  - bridge-util
+  - bridge-utils
   - bash-completion
   - kexec-tools
   - sos
