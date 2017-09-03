@@ -6,13 +6,29 @@
 
 - name: Install Docker
   yum:
-    name: docker
+    name: item
+    state: latest
+  with_items:
+  - wget
+  - git
+  - net-tool
+  - bind-util
+  - iptables-services
+  - bridge-util
+  - bash-completion
+  - kexec-tools
+  - sos
+  - psacct
+
+- name: Install Docker
+  yum:
+    name: docker-latest
     state: latest
 
 - name: config docker
   template:
     src: docker.j2
-    dest: /etc/sysconfig/docker
+    dest: /etc/sysconfig/docker-latest
     owner: root
     group: root
     mode: 0644
@@ -20,7 +36,7 @@
 - name: config docker-network
   template:
     src: docker-network.j2
-    dest: /etc/sysconfig/docker-network
+    dest: /etc/sysconfig/docker-latest-network
     owner: root
     group: root
     mode: 0644
@@ -28,13 +44,19 @@
 - name: config docker-storage
   copy:
     src: docker-storage
-    dest: /etc/sysconfig/docker-storage
+    dest: /etc/sysconfig/docker-latest-storage
     owner: root
     group: root
     mode: 0644
 
+- name: Create /etc/sysconfig/docker
+  file:
+    path: /etc/sysconfig/docker
+    state: file
+    mode:  0755
+ 
 - name: Restart Docker Service
   service:
-    name: docker
+    name: docker-latest
     enabled: yes
     state: restarted
