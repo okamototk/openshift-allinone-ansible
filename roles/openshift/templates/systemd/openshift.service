@@ -12,7 +12,7 @@ WorkingDirectory=/var/lib/origin
 EnvironmentFile=-/etc/sysconfig/openshift
 #Environment=DOCKER_HTTP_HOST_COMPAT=1
 Environment=PATH=/usr/libexec/docker:/usr/bin:/usr/sbin:/opt/openshift
-ExecStart=/opt/openshift/oc cluster up --public-host ${OPENSHIFT_PUBLIC_HOST}
+ExecStart=/opt/openshift/oc cluster up --public-hostname=${OPENSHIFT_PUBLIC_HOST}
 ExecStop=/opt/openshift/oc cluster down
 #ExecStart=/opt/openshift/openshift \
 #          start\
