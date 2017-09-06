@@ -98,6 +98,10 @@
     permanent: true
     state: enabled
 
+- name: Reload firewall
+  shell: |
+    /usr/bin/firewall-cmd --reload
+
 - name: Install OpenShift Systemd file 1/2
   template:
     src: systemd/openshift.service
