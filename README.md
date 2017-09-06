@@ -15,20 +15,26 @@
 
 Set envirnoment (keeping them on .bash_profile is better)
 
-    # export KUBECONFIG=/opt/openshift/openshift.local.config/master/admin.kubeconfig
-    # export CURL_CA_BUNDLE=/opt/openshift/openshift.local.config/master/ca.crt
-    # export PATH=/opt/openshift:${PATH}
+	# export KUBECONFIG=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+	# export CURL_CA_BUNDLE=/var/lib/origin/openshift.local.config/master/ca.crt
+	# export PATH=/opt/openshift:${PATH}
 
 Copy config file
 
-    # cp /opt/openshift/openshift.local.config/master/admin.kubeconfig  ~/.kube/config
+    # cp /var/lib/origin/openshift.local.config/master/admin.kubeconfig  ~/.kube/config
 
 Currently, support only root user.
 
-Run private docker registry
 
-    $ oc login -u system:admin
-    $ oc project default
-    $ oadm registry --service-account=registry --images='registry.access.redhat.com/openshift3/ose-${component}:${version}' --selector='region=infra'
+## Test
+
+
+    $ oc login -u admin:admin
+    $ oc new project test
+    $ oc project test
+    $ oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app.git
+    $ oc expose service springboot-sample-app --hostname=springboot-sample-app.your-openshift-installation.com
+
+
 
 
