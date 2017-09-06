@@ -29,7 +29,7 @@ Currently, support only root user.
 ## Test
 
 
-    $ oc login -u admin:admin
+    $ oc login -u admin
     $ oc new project test
     $ oc project test
     $ oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app.git
