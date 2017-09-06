@@ -66,24 +66,28 @@
 
 - name: Allow portal access
   firewalld:
+    zone: public
     port: 8443/tcp
     permanent: true
     state: enabled
 
 - name: Allow api access
   firewalld:
+    zone: public
     port: 443/tcp
     permanent: true
     state: enabled
 
 - name: Allow DNS access
   firewalld:
+    zone: public
     port: 8053/udp
     permanent: true
     state: enabled
 
 - name: Allow DNS access
   firewalld:
+    zone: public
     port: 53/udp
     permanent: true
     state: enabled
