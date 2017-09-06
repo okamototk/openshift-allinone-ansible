@@ -13,6 +13,13 @@
 
 ## After installation
 
+Allow firewall for OpenShift Services:
+
+   # iptables -A IN_public_allow -p tcp -m tcp --dport 443 -m conntrack --ctstate NEW -j ACCEPT
+   # iptables -A IN_public_allow -p tcp -m tcp --dport 8443 -m conntrack --ctstate NEW -j ACCEPT
+   # iptables -A IN_public_allow -p udp -m udp --dport 53 -m conntrack --ctstate NEW -j ACCEPT
+   # iptables -A IN_public_allow -p udp -m udp --dport 8053 -m conntrack --ctstate NEW -j ACCEPT
+
 Set envirnoment (keeping them on .bash_profile is better)
 
 	# export KUBECONFIG=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
