@@ -2,6 +2,7 @@
   copy:
     src:  CentOS-CR.repo
     dest: /etc/yum.repos.d/CentOS-CR.repo
+  when: ansible_distribution == "CentOS"
 
 - name: Yum update
   yum:
