@@ -37,6 +37,12 @@
     path: "{{install_dir}}/openshift.local.config/master/admin.kubeconfig"
   register: st
 
+- name: Install Bash Completions
+  shell: | 
+  curl -k -L -o /etc/bash_completion.d/oc https://github.com/openshift/origin/raw/master/contrib/completions/bash/oc 
+  curl -k -L -o /etc/bash_completion.d/oadm https://github.com/openshift/origin/raw/master/contrib/completions/bash/oadm
+  curl -k -L -o /etc/bash_completion.d/openshift https://github.com/openshift/origin/raw/master/contrib/completions/bash/openshift
+
 #- block: 
 #  - name: Run OpenShift Tempolary
 #    shell: |
