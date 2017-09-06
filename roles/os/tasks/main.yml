@@ -1,0 +1,12 @@
+- name: Enable CentOS CR repository
+  copy:
+    src:  CentOS-CR.repo
+    dest: /etc/yum.repos.d/CentOS-CR.repo
+
+- name: Yum update
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+  - kernel
+  - firewalld
