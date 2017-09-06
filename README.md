@@ -37,7 +37,7 @@ Currently, support only root user.
 
 
     $ oc login -u admin
-    $ oc new project test
+    $ oc new-project test
     $ oc project test
     $ oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app.git
     $ oc expose service springboot-sample-app --hostname=springboot-sample-app.your-openshift-installation.com
