@@ -96,18 +96,26 @@
     group: root
     mode: 0644
 
-- name: Install OpenShift Systemd file 2/2
-  template:
-    src: systemd/openshift.j2
-    dest: /etc/sysconfig/openshift
-    owner: root
-    group: root
-    mode: 0644
+- name: Run OpenShift Cluster
+  shell: |
+    /opt/openshift/oc cluster up --public-hostname={{ network.portal }}
 
-- name: Start OpenShift Service
-  systemd:
-    daemon-reload: yes
-    name: openshift
+- name: Set Docker interface IP
+  shell: |
+    ip addr add 172.17.0.1/16 dev docker0
+
+#- name: Install OpenShift Systemd file 2/2
+#  template:
+#    src: systemd/openshift.j2
+#    dest: /etc/sysconfig/openshift
+#    owner: root
+#    group: root
+#    mode: 0644
+
+#- name: Start OpenShift Service
+#  systemd:
+#    daemon-reload: yes
+#    name: openshift
 
 #- name: Add Registry
 #  shell: |
