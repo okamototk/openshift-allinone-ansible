@@ -22,13 +22,13 @@
 
 - name: Install Docker
   yum:
-    name: docker-latest
+    name: docker
     state: latest
 
 - name: config docker
   template:
     src: docker.j2
-    dest: /etc/sysconfig/docker-latest
+    dest: /etc/sysconfig/docker
     owner: root
     group: root
     mode: 0644
@@ -36,7 +36,7 @@
 - name: config docker-network
   template:
     src: docker-network.j2
-    dest: /etc/sysconfig/docker-latest-network
+    dest: /etc/sysconfig/docker-network
     owner: root
     group: root
     mode: 0644
@@ -44,19 +44,13 @@
 - name: config docker-storage
   copy:
     src: docker-storage
-    dest: /etc/sysconfig/docker-latest-storage
+    dest: /etc/sysconfig/docker-storage
     owner: root
     group: root
     mode: 0644
 
-- name: Create /etc/sysconfig/docker
-  file:
-    path: /etc/sysconfig/docker
-    state: file
-    mode:  0755
- 
 - name: Restart Docker Service
   service:
-    name: docker-latest
+    name: docker
     enabled: yes
-    state: restarted
+#    state: restarted
