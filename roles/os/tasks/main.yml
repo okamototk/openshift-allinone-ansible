@@ -21,7 +21,7 @@
 
 - name: Set hostname
   shell: |
-    /usr/bin/hostnamectl set-hostname "{{ ansible_fqdn }}"
+    /usr/bin/hostnamectl set-hostname --static "{{ ansible_fqdn }}"
 
 - name: reboot!
   become: yes
