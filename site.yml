@@ -1,5 +1,6 @@
 - name: sample
-  hosts: localhost
+#  hosts: localhost
+  hosts: openshift
   vars:
     network:
       dns: 8.8.8.8

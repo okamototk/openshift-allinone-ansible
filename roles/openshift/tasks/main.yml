@@ -1,1 +1,2 @@
-- include: local-install.yml
+#- include: local-install.yml
+- include: prepare-ansible.yml
