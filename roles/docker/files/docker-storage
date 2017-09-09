@@ -8,5 +8,5 @@
 # restrictive defaults, such as 100GB max storage.
 
 DOCKER_STORAGE_OPTIONS=
-STORAGE_DRIVER='-s overlay2'
+STORAGE_DRIVER=
 
