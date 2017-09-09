@@ -12,16 +12,26 @@
   - kernel
   - firewalld
 
+- name: Disable Change Hostname by waagent (for Azure)
+  replace:
+    path: /etc/waagent.conf
+    regexp: 'Provisioning.MonitorHostName=y'
+    replace: 'Provisioning.MonitorHostName=n'
+  when: ansible_system_vendor == "Microsoft Corporation"
+
 - name: Set hostname
   shell: |
     /usr/bin/hostnamectl set-hostname "{{ ansible_fqdn }}"
 
 - name: reboot!
-  command: /usr/sbin/shutdown -r now
+  become: yes
+  shell: sleep 2 && /usr/sbin/shutdown -r now
+  async: 1
+  poll:  0
+#  ignore_errors: true
 
 - name: wait for SSH port down
-  local_action: wait_for host={{ inventory_hostname }} port=22 state=stopped
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=60
+  become: false
 
-- name: wait for SSH port up
-  wait_for: host={{ inventory_hostname }} port=22 state=started delay=30
-  delegate_to: 127.0.0.1
+
