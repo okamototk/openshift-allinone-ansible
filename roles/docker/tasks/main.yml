@@ -5,7 +5,7 @@
     state: stopped
 
 - name: Install required packages
-  yum:
+  package:
     name: "{{item}}"
     state: latest
   with_items:
@@ -21,7 +21,7 @@
   - psacct
 
 - name: Install Docker
-  yum:
+  package:
     name: docker
     state: latest
 
