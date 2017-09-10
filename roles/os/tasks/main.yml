@@ -40,7 +40,7 @@
 #  ignore_errors: true
 
 - name: wait for SSH port down
-  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=60
+  local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=180
   become: false
 
 
