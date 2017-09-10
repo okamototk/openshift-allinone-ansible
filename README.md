@@ -8,8 +8,8 @@
 hostsを編集し、OpenShiftのサーバを指定する
 
     [openshift]
-    ose3-master1.local
-    ose3-node1.local
+    os-master1
+    os-node1
 
 Ansibleを実行する。
 
@@ -24,9 +24,11 @@ Ansibleを実行する。
 
     127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
     ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-    10.0.0.7 ose-master1.local
-    10.0.0.8 ose-node1.local
+    10.0.0.7 os-master1
+    10.0.0.8 os-node1
 
+
+### ボリュームの設定(devicemapperドライバを利用する場合)
 
 /etc/sysconfig/docker-storage-setupに下記の行を追加する。
 
@@ -84,14 +86,14 @@ deployment_type=origin
 openshift_release=v3.6
 
 [masters]
-ose3-master1.local
+ose3-master1
 
 [etcd]
-ose3-master1.local
+os-master1
 
 [nodes]
-ose3-master1.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ose3-node1.local openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+os-master1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 ```
 
 下記のコマンドでansibleを実行
@@ -102,15 +104,15 @@ ose3-node1.local openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 設定されていない可能性がある。その場合は、下記のようにして、スケジューラを有効にする。
 
 ```
-[root@ose-master1 ~]# oc get nodes
+[root@os-master1 ~]# oc get nodes
 NAME                STATUS                     AGE       VERSION
-ose-master1.local   Ready,SchedulingDisabled   14m       v1.6.1+5115d708d7
-ose-node1.local     Ready                      14m       v1.6.1+5115d708d7
-[root@ose-master1 ~]# oadm manage-node ose-master1.local --schedulable=true
+os-master1   Ready,SchedulingDisabled   14m       v1.6.1+5115d708d7
+os-node1     Ready                      14m       v1.6.1+5115d708d7
+[root@os-master1 ~]# oadm manage-node os-master1.local --schedulable=true
 NAME                STATUS    AGE       VERSION
-ose-master1.local   Ready     15m       v1.6.1+5115d708d7
-[root@ose-master1 ~]# oc get nodes
+os-master1   Ready     15m       v1.6.1+5115d708d7
+[root@os-master1 ~]# oc get nodes
 NAME                STATUS    AGE       VERSION
-ose-master1.local   Ready     15m       v1.6.1+5115d708d7
-ose-node1.local     Ready     15m       v1.6.1+5115d708d7
+os-master1   Ready     15m       v1.6.1+5115d708d7
+os-node1     Ready     15m       v1.6.1+5115d708d7
 ```

@@ -2,6 +2,8 @@
 #  hosts: localhost
   hosts: openshift
   vars:
+    docker:
+      storage_driver: overlay2
     network:
       dns: 8.8.8.8
       portal: 192.168.1.149
