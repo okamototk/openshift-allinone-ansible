@@ -100,6 +100,11 @@ os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
     # ansible-playbook -i hosts.inventry playbooks/byo/config.yml
 
+# トラブルシューティング
+
+
+## masterノードが正しく動作しない
+
 途中、routerやregistryの作成がうまくいかない場合は、スケジューラが正しく
 設定されていない可能性がある。その場合は、下記のようにして、スケジューラを有効にする。
 
@@ -116,3 +121,29 @@ NAME                STATUS    AGE       VERSION
 os-master1   Ready     15m       v1.6.1+5115d708d7
 os-node1     Ready     15m       v1.6.1+5115d708d7
 ```
+## Docker Resgitryへのpushに失敗する
+
+Docker Resgistryへのpushに下記のメッセージと共に失敗する
+
+    error: build error: Failed to push image: Get https://docker-registry.default.svc:5000/v1/_ping: dial tcp: lookup docker-registry.default.svc on 168.63.129.16:53: no such host
+
+ResgistryのURLがOpenShiftに登録されたレジストリとあっていない場合発声する。下記の記述を追加する。
+
+### /etc/sysconfig/origin-master
+
+
+    OPENSHIFT_DEFAULT_REGISTRY=docker-registry.default.svc.cluster.local:5000
+
+## コンテナが名前解決に失敗する
+
+コンテナは、Dockerホスト上で動作しているdnsmasqを読みに行く。dnsmasqの設定が正しく行われていないと
+コンテナ上で名前解決に失敗する。masterノード上で下記のようなファイルを作成してやり
+
+### /etc/dnsmasq.d/external-dns.conf
+
+    server=127.0.0.1
+    server=8.8.8.8
+
+dnsmasqサービスを再起動する。
+
+    # systemctl restart dnsmasq.service
