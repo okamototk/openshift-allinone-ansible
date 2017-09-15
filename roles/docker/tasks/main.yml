@@ -61,4 +61,4 @@
   service:
     name: docker
     enabled: yes
-#    state: restarted
+    state: restarted
