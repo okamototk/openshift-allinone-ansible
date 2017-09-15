@@ -12,6 +12,7 @@
   - kernel
   - kernel-tools
   - firewalld
+  - dnsmasq
 
 - name: Disable Change Hostname by waagent (for Azure)
   replace:
