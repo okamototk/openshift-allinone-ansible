@@ -105,7 +105,11 @@ os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
 ## masterノードが正しく動作しない
 
-途中、routerやregistryの作成がうまくいかない場合は、スケジューラが正しく
+インストール途中、下記のメッセージが出て途中で止まることがある。
+
+    TASK [openshift_hosted : Ensure OpenShift router correctly rolls out (best-effort today)] ...
+
+上記のようなメッセージが出てrouterやregistryの作成がうまくいかない場合は、スケジューラが正しく
 設定されていない可能性がある。その場合は、下記のようにして、スケジューラを有効にする。
 
 ```
