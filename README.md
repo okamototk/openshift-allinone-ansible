@@ -85,6 +85,8 @@ product_type=openshift
 deployment_type=origin
 openshift_release=v3.6
 
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
+
 [masters]
 ose3-master1
 
