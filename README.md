@@ -102,6 +102,49 @@ os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
     # ansible-playbook -i hosts.inventry playbooks/byo/config.yml
 
+
+# 使い方
+
+masterノードにSSHでログインし、下記のコマンドでadminユーザ(パスワードadmin)を作成する。
+
+    # htpasswd -b /etc/openshift/openshift-passwd  admin admin
+
+adminユーザでログインする。
+
+    # oc login
+    Authentication required for https://os-master1.local:8443 (openshift)
+    Username: admin
+    Password: 
+    Login successful.
+
+    You don't have any projects. You can try to create a new project, by running
+
+        oc new-project <projectname>
+
+プロジェクトを作成する。
+
+    # oc new-project test
+    Now using project "test" on server "https://os-master1.local:8443".
+    
+    You can add applications to this project with the 'new-app' command. For example, try:
+    
+        oc new-app centos/ruby-22-centos7~https://github.com/openshift/ruby-ex.git
+
+to build a new example application in Ruby.
+
+SpringBootのサンプルアプリケーションを作成する。
+
+    # oc new-app codecentric/springboot-maven3-centos~https://github.com/codecentric/springboot-sample-app.git
+
+ビルドが完了したかどうか、下記のコマンドで確認する。
+
+    # oc logs -f bc/springboot-sample-app
+
+他のホストからアクセスできるように、Rourterに追加する。
+
+    # oc expose service springboot-sample-app --hostname=springboot-sample-app.your-openshift-installation.com
+
+
 # トラブルシューティング
 
 
@@ -127,18 +170,62 @@ NAME                STATUS    AGE       VERSION
 os-master1   Ready     15m       v1.6.1+5115d708d7
 os-node1     Ready     15m       v1.6.1+5115d708d7
 ```
-## Docker Resgitryへのpushに失敗する
+## Docker Resgitryへのpushに失敗する(1)
 
 Docker Resgistryへのpushに下記のメッセージと共に失敗する
 
     error: build error: Failed to push image: Get https://docker-registry.default.svc:5000/v1/_ping: dial tcp: lookup docker-registry.default.svc on 168.63.129.16:53: no such host
 
-ResgistryのURLがOpenShiftに登録されたレジストリとあっていない場合発声する。下記の記述を追加する。
 
-### /etc/sysconfig/origin-master
+masterノード上でpingを実行し、名前解決ができていることを確認する。
+
+    # ping docker-registry.default.svc
+    PING docker-registry.default.svc.cluster.local (172.30.93.136) 56(84) bytes of data.
+
+名前解決ができていなければ、
+
+/etc/dnsmasq.d/external-dns.confに127.0.0.1が設定されていることと、
+
+    server=127.0.0.1
+    server=8.8.8.8
+
+/etc/resolve.confでcluster.localをDNSの検索対象に入っていることを確認する。
+
+    search cluster.local
+    nameserver 192.168.1.151
 
 
-    OPENSHIFT_DEFAULT_REGISTRY=docker-registry.default.svc.cluster.local:5000
+## Docker Registryへのpushに失敗する(2)
+
+下記のようなログ表示とともに、イメージのプッシュに失敗し、ｍ
+
+    # oc logs -f bc/springboot-sample-app
+    ...
+    Pushing image docker-registry.default.svc.cluster.local:5000/test/springboot-sample-app:latest ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    Warning: Push failed, retrying in 5s ...
+    error: build error: Failed to push image: After retrying 6 times, Push image still failed
+
+次のように、Docker Registryがペンディングになっている場合、
+
+    # oc status -v
+    In project default on server https://os-master1.local:8443
+    
+    https://docker-registry-default.router.default.svc.cluster.local (passthrough) (svc/docker-registry)
+      dc/docker-registry deploys docker.io/openshift/origin-docker-registry:v3.6.0
+        deployment #1 pending 3 hours ago
+
+マスターノードがReadyになっていることを確認する。
+
+    # oc get nodes
+    NAME                STATUS    AGE       VERSION
+    os-master1   Ready     15m       v1.6.1+5115d708d7
+    os-node1     Ready     15m       v1.6.1+5115d708d7
 
 ## コンテナが名前解決に失敗する
 
