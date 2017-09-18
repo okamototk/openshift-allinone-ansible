@@ -12,18 +12,22 @@
     with_items:
     - kernel
     - kernel-tools
+    register: is_kernel_update
+
   - name: reboot!
     become: yes
     shell: sleep 2 && /usr/sbin/shutdown -r now
     async: 1
     poll:  0
+    when: is_kernel_update.changed
   #  ignore_errors: true
+
 
   - name: wait for SSH port down
     local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=180
     become: false
-        
-  when: ansible_kernel | version_compare('3.10.0-693', '<')
+
+#  when: ansible_kernel | version_compare('3.10.0-693', '<')
   tags: kernel_update
 
 - name: Pacakge update
