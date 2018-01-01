@@ -53,20 +53,6 @@ openshift-ansibleを取得する
 
     # git clone https://github.com/openshift/openshift-ansible
 
-低スペックのマシンでテストする場合は、スペックチェックで引っかかるので
-下記のファイルを編集し、チェックを無効にする。
-
-### playbooks/common/openshift-cluster/config.yml
-
-```
-   - action: openshift_health_check
-     args:
-       checks:
-#      - disk_availability
-#      - memory_availability
-       - package_availability
-       - package_version
-```
 
 OpenShiftの構成を定義したhosts.inventryを作成する
 
@@ -83,7 +69,9 @@ ansible_ssh_user=root
 
 product_type=openshift
 deployment_type=origin
-openshift_release=v3.6
+openshift_release=v3.7
+openshift_master_api_port=443
+openshift_master_console_port=443
 
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
 
@@ -100,7 +88,9 @@ os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
 下記のコマンドでansibleを実行
 
-    # ansible-playbook -i hosts.inventry playbooks/byo/config.yml
+    # ansible-playbook -e openshift_disable_check=disk_availability,memory_availability -i hosts.inventry playbooks/byo/config.yml
+
+小さいサイズのVMなどで試す場合は、diskとmeomryチェックを無視する設定を追加する。
 
 # 確認
 
