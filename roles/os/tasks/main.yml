@@ -51,11 +51,11 @@
   shell: |
     /usr/bin/hostnamectl set-hostname --static "{{ inventory_hostname }}"
 
-- name: Add hosts file
-  template:
-    src: hosts.j2
-    dest: /etc/hosts
-    owner: root
-    group: root
-    mode: 0644
+#- name: Add hosts file
+#  template:
+#    src: hosts.j2
+#    dest: /etc/hosts
+#    owner: root
+#    group: root
+#    mode: 0644
 
