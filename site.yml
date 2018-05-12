@@ -1,17 +1,16 @@
-- name: sample
-  hosts: nodes
+#- name: all
+#  hosts: masters:nodes:etcds:lb:nfs
+#  roles:
+#  - common
+
+- name: docker host
+  hosts: masters:nodes
   vars:
     docker:
-      storage_driver: overlay
+      storage_driver: overlay2
     network:
       dns: 8.8.8.8
-#      portal: 192.168.1.149
-#    openshift:
-#      master: localhost
-#    install_dir: /opt/openshift
-#    openshift_tgz: https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-server-v3.6.0-c4dd4cf-linux-64bit.tar.gz
-#    openshift_extract_dir: openshift-origin-server-v3.6.0-c4dd4cf-linux-64bit
   roles:
   - os
   - docker
-  - openshift
+#  - openshift

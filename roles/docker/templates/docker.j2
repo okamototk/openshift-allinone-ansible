@@ -1,11 +1,14 @@
 # /etc/sysconfig/docker
 
 # Modify these options if you want to change the way the docker daemon runs
-OPTIONS='--selinux-enabled --log-driver=journald --dns={{ network.dns }}'
+OPTIONS='--selinux-enabled --log-driver=journald --signature-verification=false --dns={{ network.dns }}'
 if [ -z "${DOCKER_CERT_PATH}" ]; then
     DOCKER_CERT_PATH=/etc/docker
 fi
 
+# Do not add registries in this file anymore. Use /etc/containers/registries.conf
+# from the atomic-registries package.
+#
 # If you want to add your own registry to be used for docker search and docker
 # pull use the ADD_REGISTRY option to list a set of registries, each prepended
 # with --add-registry flag. The first registry added will be the first registry
@@ -25,6 +28,24 @@ ADD_REGISTRY='--add-registry registry.access.redhat.com'
 INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
 
 
+# If you want to add your own registry to be used for docker search and docker
+# pull use the ADD_REGISTRY option to list a set of registries, each prepended
+# with --add-registry flag. The first registry added will be the first registry
+# searched.
+ADD_REGISTRY='--add-registry registry.access.redhat.com'
+
+# If you want to block registries from being used, uncomment the BLOCK_REGISTRY
+# option and give it a set of registries, each prepended with --block-registry
+# flag. For example adding docker.io will stop users from downloading images
+# from docker.io
+# BLOCK_REGISTRY='--block-registry'
+
+# If you have a registry secured with https but do not have proper certs
+# distributed, you can tell docker to not look for full authorization by
+# adding the registry to the INSECURE_REGISTRY line and uncommenting it.
+# INSECURE_REGISTRY='--insecure-registry'
+INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
+
 # On an SELinux system, if you remove the --selinux-enabled option, you
 # also need to turn on the docker_transition_unconfined boolean.
 # setsebool -P docker_transition_unconfined 1
@@ -37,7 +58,6 @@ INSECURE_REGISTRY='--insecure-registry 172.30.0.0/16'
 # Controls the /etc/cron.daily/docker-logrotate cron job status.
 # To disable, uncomment the line below.
 # LOGROTATE=false
-#
 
 # docker-latest daemon can be used by starting the docker-latest unitfile.
 # To use docker-latest client, uncomment below lines

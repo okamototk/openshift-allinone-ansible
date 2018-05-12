@@ -9,8 +9,6 @@
     name: "{{item}}"
     state: latest
   with_items:
-  - wget
-  - git
   - net-tools
   - bind-utils
   - iptables-services
@@ -25,7 +23,7 @@
     name: docker
     state: latest
 
-- name: config docker
+- name: Config /etc/sysconfig/docker
   template:
     src: docker.j2
     dest: /etc/sysconfig/docker
@@ -33,7 +31,7 @@
     group: root
     mode: 0644
 
-- name: config docker-network
+- name: Config /etc/sysconfig/docker-network
   template:
     src: docker-network.j2
     dest: /etc/sysconfig/docker-network
@@ -41,7 +39,7 @@
     group: root
     mode: 0644
 
-- name: config docker-storage
+- name: Config /etc/sysconfig/docker-storage
   copy:
     src: docker-storage
     dest: /etc/sysconfig/docker-storage
@@ -49,7 +47,7 @@
     group: root
     mode: 0644
 
-- name: config docker-storage-setup
+- name: Config /etc/sysconfig/docker-storage-setup
   template:
     src: docker-storage-setup.j2
     dest: /etc/sysconfig/docker-storage-setup

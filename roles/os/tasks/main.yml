@@ -1,10 +1,10 @@
-- name: Enable CentOS CR repository
-  copy:
-    src:  CentOS-CR.repo
-    dest: /etc/yum.repos.d/CentOS-CR.repo
-  when: 
-  - ansible_distribution == "CentOS" 
-  - ansible_distribution_version | version_compare('7.4.1708', '<')
+#- name: Enable CentOS CR repository
+#  copy:
+#    src:  CentOS-CR.repo
+#    dest: /etc/yum.repos.d/CentOS-CR.repo
+#  when: 
+#  - ansible_distribution == "CentOS" 
+#  - ansible_distribution_version | version_compare('7.4.1708', '<')
 
 - block:
   - name: Kernel Pacakge update
@@ -23,13 +23,12 @@
     poll:  0
     when: is_kernel_update.changed
   #  ignore_errors: true
-
-
+ 
   - name: wait for SSH port down
     local_action: wait_for host={{ inventory_hostname }} port=22 state=started delay=30 timeout=180
     become: false
-
-#  when: ansible_kernel | version_compare('3.10.0-693', '<')
+ 
+  when: ansible_kernel | version_compare('3.10.0-693', '<')
   tags: kernel_update
 
 - name: Pacakge update
