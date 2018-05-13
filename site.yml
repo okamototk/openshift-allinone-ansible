@@ -1,16 +1,16 @@
-#- name: all
-#  hosts: masters:nodes:etcds:lb:nfs
-#  roles:
-#  - common
-
-- name: docker host
-  hosts: masters:nodes
-  vars:
-    docker:
-      storage_driver: overlay2
-    network:
-      dns: 8.8.8.8
+- name: all
+  hosts: masters:nodes:etcd:lb:nfs
   roles:
-  - os
-  - docker
-#  - openshift
+  - common
+
+#- name: docker host
+#  hosts: masters:nodes
+#  vars:
+#    docker:
+#      storage_driver: overlay2
+#    network:
+#      dns: 8.8.8.8
+#  roles:
+#  - os
+#  - docker
+
