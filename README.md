@@ -97,7 +97,7 @@ host_varディレクトリをopenshift-ansibleディレクトリに作成し、�
 
 下記のコマンドでansibleを実行
 
-    # ansible-playbook -e openshift_disable_check=disk_availability,memory_availability -i hosts.inventry playbooks/byo/config.yml
+    # ansible-playbook -i inventory/hosts.myinventry playbooks/deploy_cluster.yml  -e openshift_disable_check=disk_availability,memory_availability
 
 小さいサイズのVMなどで試す場合は、diskとmeomryチェックを無視する設定を追加する。
 
