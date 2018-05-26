@@ -3,14 +3,14 @@
   roles:
   - common
 
-#- name: docker host
-#  hosts: masters:nodes
-#  vars:
-#    docker:
-#      storage_driver: overlay2
-#    network:
-#      dns: 8.8.8.8
-#  roles:
-#  - os
-#  - docker
+- name: docker host
+  hosts: masters:nodes
+  vars:
+     docker:
+      storage_driver: overlay2
+    network:
+      dns: 8.8.8.8
+  roles:
+  - os
+  - docker
 
