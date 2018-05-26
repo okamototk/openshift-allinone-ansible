@@ -1,0 +1,21 @@
+- name: Disabled firewalld
+  service:
+    name: firewalld
+    state: started
+    enabled: yes
+
+- name: Install RPMS
+  package:
+    name: "{{item}}"
+    state: latest
+  with_items:
+  - PyYAML
+  - python-ipaddress
+
+- name: Add origin yum repository
+  yum_repository:
+    name: origin
+    description: OpenShift Origin YUM repo
+    file: origin
+    baseurl: http://mirror.centos.org/centos/7/paas/x86_64/openshift-origin/
+    gpgcheck: no
