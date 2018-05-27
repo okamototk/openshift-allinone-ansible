@@ -1,9 +1,0 @@
-- name: Create dummy /etc/origin/node/resolv.conf
-  file:
-    path=/etc/origin/node/resolv.conf
-    state=file
-    recure=yes
-    owner=root
-    group=root
-    mode=644
- 
