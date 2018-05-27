@@ -36,7 +36,6 @@
     name: "{{item}}"
     state: latest
   with_items:
-  - firewalld
   - dnsmasq
 
 - name: Disable Change Hostname by waagent (for Azure)
