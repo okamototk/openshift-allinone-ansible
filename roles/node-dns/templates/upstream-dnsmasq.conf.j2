@@ -1,0 +1,2 @@
+server=127.0.0.1
+server={{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}

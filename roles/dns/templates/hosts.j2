@@ -1,0 +1,7 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+{{ ansible_default_ipv4["address"] }} {{ ansible_hostname }} {{ openshift_master_cluster_hostname }}
+{% for h in groups['nodes'] %}
+{{ hostvars[h].ansible_eth0.ipv4.address }} {{ hostvars[h].ansible_hostname }}
+{% endfor %}
+

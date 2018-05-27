@@ -1,0 +1,19 @@
+- name: Install dnsmasq
+  yum:
+    name: dnsmasq
+    state: latest
+
+- name: dnsmasq config
+  template:
+    src: upstream-dnsmasq.conf.j2
+    dest: /etc/dnsmasq.d/upstream-dnsmasq.conf
+
+- name: Create Openshift resolv.conf
+  template:
+    src: origin-resolv.conf.j2
+    dest: /etc/origin/node/resolv.conf
+
+- name: Restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted

@@ -1,0 +1,35 @@
+- name: Create hosts file
+  template:
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: Install dnsmasq
+  yum:
+    name: dnsmasq
+    state: latest
+
+- name: Start dnsmasq
+  service:
+    name: dnsmasq
+    state: started
+    enabled: yes
+
+- name: Allow DNS Port
+  iptables:
+    chain: INPUT
+    protocol: udp
+    destination_port: 53
+    ctstate: NEW
+#    syn: match
+    jump: ACCEPT
+    comment: Accept DNS
+
+#- name: Add dns port
+#  firewalld:
+#    service: dns
+#    state: enabled
+
+#- name: Restart firewalld
+#  service:
+#    name: firewalld
+#    state: restarted
