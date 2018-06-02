@@ -61,8 +61,10 @@ openshift_master_default_subdomain=apps.test.example.com
 
 #Set cluster_hostname to point at your load balancer
 openshift_master_cluster_hostname=ose3-lb.test.example.com
-
-
+#openshift_master_api_url=http://master.test.example.com
+#openshift_master_api_use_ssl=https://master.test.example.com
+openshift_master_public_api_url=https://master.test.example.com:8443
+openshift_master_public_console_url=https://master.test.example.com:8443
 
 ###############################################################################
 # Additional configuration variables follow                                   #
