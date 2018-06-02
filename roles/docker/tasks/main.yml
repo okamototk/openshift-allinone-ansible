@@ -1,8 +1,8 @@
-- name: Disable dnsmasq
-  service: 
-    name: dnsmasq
-    enabled: no
-    state: stopped
+#- name: Disable dnsmasq
+#  service: 
+#    name: dnsmasq
+#    enabled: no
+#    state: stopped
 
 - name: Install required packages
   package:

@@ -8,6 +8,18 @@
     src: upstream-dnsmasq.conf.j2
     dest: /etc/dnsmasq.d/upstream-dnsmasq.conf
 
+- name: Upstream DNS
+  lineinfile:
+    path: /etc/dnsmasq.d/upstream-dns.conf
+    line: "server={{ dns }}"
+    create: yes
+
+- name: Create /etc/origin/node
+  file:
+    path: /etc/origin/node
+    state: directory
+    recurse: yes
+
 - name: Create Openshift resolv.conf
   template:
     src: origin-resolv.conf.j2
@@ -17,3 +29,4 @@
   service:
     name: dnsmasq
     state: restarted
+    enabled: yes

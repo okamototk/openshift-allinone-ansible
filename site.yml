@@ -6,15 +6,15 @@
   roles:
   - dns
 
-- name: all
-  hosts: masters:nodes:etcd:lb:nfs
-  roles:
-  - common
-
 - name: docker host
   hosts: masters:nodes
   roles:
   - node-dns
+
+- name: all
+  hosts: masters:nodes:etcd:lb:nfs
+  roles:
+  - common
 
 - name: docker host
   hosts: masters:nodes
