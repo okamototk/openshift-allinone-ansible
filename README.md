@@ -5,11 +5,7 @@
     # git clone https://github.com/okamototk/openshift-allinone-ansible
     # cd openshift-allinone-ansible
 
-hostsを編集し、OpenShiftのサーバを指定する
-
-    [openshift]
-    os-master1
-    os-node1
+hosts.inventoryを参考にインベントリファイルを作成する。
 
 Ansibleを実行する。
 
@@ -86,14 +82,6 @@ os-master1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
 os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
 ```
-
-host_varディレクトリをopenshift-ansibleディレクトリに作成し、ホスト名(eg. os_master1.local)で下記のファイルを作成する。openshift_ipは、masterノードのIPアドレス。
-
-
-    openshift_ip: 10.0.0.15
-    openshift_hostname: os-master1.local
-
-
 
 下記のコマンドでansibleを実行
 
