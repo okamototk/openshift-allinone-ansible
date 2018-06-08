@@ -5,6 +5,7 @@
 # should use an external load balancing solution that itself is highly available.
 
 [masters]
+#ose3-master1 openshift_public_hostname=master.test.example.com
 ose3-master1
 
 [etcd]
@@ -60,11 +61,13 @@ openshift_release=v3.9
 openshift_master_default_subdomain=apps.test.example.com
 
 #Set cluster_hostname to point at your load balancer
-openshift_master_cluster_hostname=ose3-lb.test.example.com
-#openshift_master_api_url=http://master.test.example.com
-#openshift_master_api_use_ssl=https://master.test.example.com
+#openshift_master_console_port=8443
+#openshift_master_cluster_hostname=master.test.example.com
+openshift_master_cluster_public_hostname=master.test.example.com
+#openshift_master_api_url=https://master.test.example.com:8443/
+#openshift_master_api_use_ssl=https://master.test.example.com:8443
 openshift_master_public_api_url=https://master.test.example.com:8443
-openshift_master_public_console_url=https://master.test.example.com:8443
+#openshift_master_public_console_url=https://master.test.example.com:8443/console
 
 ###############################################################################
 # Additional configuration variables follow                                   #
