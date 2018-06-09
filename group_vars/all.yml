@@ -1,1 +1,3 @@
 dns: 8.8.8.8
+host_domain: test.example.com
+

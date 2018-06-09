@@ -1,7 +1,7 @@
-- name: Disable firewalld
+- name: Enabled firewalld
   service:
     name: firewalld
-    state: stopped
+    state: started
     enabled: yes
 
 - name: Install RPMS
@@ -11,14 +11,14 @@
   with_items:
   - PyYAML
   - python-ipaddress
-  - iptables
-  - iptables-services
+#  - iptables
+#  - iptables-services
 
-- name: Enable iptables
-  service:
-    name: iptables
-    state: started
-    enabled: yes
+#- name: Enable iptables
+#  service:
+#    name: iptables
+#    state: started
+#    enabled: yes
 
 - name: Add origin yum repository
   yum_repository:
