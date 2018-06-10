@@ -769,7 +769,7 @@ openshift_master_cluster_public_hostname=openshift-ansible.public.example.com
 # os_sdn_network_plugin_name='redhat/openshift-ovs-multitenant'
 
 # Disable the OpenShift SDN plugin
-#openshift_use_openshift_sdn=True
+openshift_use_openshift_sdn=True
 
 # Configure SDN cluster network and kubernetes service CIDR blocks. These
 # network blocks should be private and should not conflict with network blocks

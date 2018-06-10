@@ -1,3 +1,6 @@
 dns: 8.8.8.8
 host_domain: test.example.com
+docker:
+  storage_driver: overlay2
+  dns: 8.8.8.8
 

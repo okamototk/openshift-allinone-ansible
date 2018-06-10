@@ -31,12 +31,12 @@
   when: ansible_kernel is version_compare('3.10.0-693', '<')
   tags: kernel_update
 
-- name: Pacakge update
-  package:
-    name: "{{item}}"
-    state: latest
-  with_items:
-  - dnsmasq
+#- name: Pacakge update
+#  package:
+#    name: "{{item}}"
+#    state: latest
+#  with_items:
+#  - dnsmasq
 
 - name: Disable Change Hostname by waagent (for Azure)
   replace:
