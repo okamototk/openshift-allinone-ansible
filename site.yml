@@ -3,6 +3,7 @@
 
 - name: docker host
   hosts: masters:nodes
+  roles:
   - os
 
 - name: dns
