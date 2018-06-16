@@ -1,0 +1,8 @@
+- name: Register Red Hat subscription
+  redhat_subscription:
+    state: present
+    username: "{{ rhsm.username }}"
+    password: "{{ rhsm.password }}"
+    autosubscribe: true
+  when: rhsm is defined
+

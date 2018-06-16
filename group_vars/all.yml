@@ -3,4 +3,8 @@ host_domain: test.example.com
 docker:
   storage_driver: overlay2
   dns: 8.8.8.8
-
+# RedHat Subscription Information
+# 
+#rhsm:
+#  username: your_subscription_username
+#  password: password
