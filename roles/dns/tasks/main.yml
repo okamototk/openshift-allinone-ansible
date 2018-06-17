@@ -30,10 +30,11 @@
     jump: ACCEPT
     comment: Accept DNS
 
-#- name: Add dns port
-#  firewalld:
-#    service: dns
-#    state: enabled
+- name: Add dns port
+  firewalld:
+    service: dns
+    state: enabled
+    permanent: yes
 
 #- name: Restart firewalld
 #  service:

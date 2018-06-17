@@ -91,27 +91,15 @@ os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 
 # 確認
 
-各ノード上で下記のコマンドを実行し、docker registryにアクセスできることを確認する。
+OpenShiftにアクセスするWebブラウザのhostsファイルにose3-lbホストにアクセスできるIPアドレスをopenshift-ansible.public.example.comに設定する。Windowsの場合、下記のファイルに記述する。
 
-    # nslookup  docker-registry.default.svc
-    Server:         127.0.0.1
-    Address:        127.0.0.1#53
-    
-    Name:   docker-registry.default.svc.cluster.local
-    Address: 172.30.54.22
+C:\Windows\System32\drivers\etc\hosts
 
-名前解決ができない場合は、/etc/resolv.confに
+    ...
+    23.96.13.5 openshift-ansible.public.example.com
 
-* searchにcluster.localが
-* nameserverに127.0.0.1が
 
-設定されていることを確認する。例えば、下記のようになる。
-
-### /etc/resolv.conf
-
-    search local cluster.local
-    nameserver 127.0.0.1
-    nameserver 8.8.8.8
+https://openshift-ansible.public.example.com:8443にブラウザでアクセスする。ユーザadmin、パスワードsmartvmでログインし、アクセスできることを確認する。
 
 # 使い方
 
