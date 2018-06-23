@@ -239,3 +239,30 @@ dnsmasqサービスを再起動する。
 
     # systemctl restart dnsmasq.service
 
+
+### サービスカタログのインストールに失敗する
+
+
+下記のようなメッセージが出力され、サービスカタログのインストールに失敗する場合、
+
+    TASK [openshift_service_catalog : wait for api server to be ready] *************************************************************************************
+    Saturday 23 June 2018  08:18:45 +0000 (0:00:01.207)       0:01:16.159 *********
+    FAILED - RETRYING: wait for api server to be ready (60 retries left).
+    FAILED - RETRYING: wait for api server to be ready (59 retries left).
+    ...
+    FAILED - RETRYING: wait for api server to be ready (1 retries left).
+    fatal: [ose3-master1.test.example.com]: FAILED! => {"attempts": 60, "changed": false, "content": "", "msg": "Status code was -1 and not [200]: Request f     ailed: <urlopen error [Errno -2] Name or service not known>", "redirected": false, "status": -1, "url": "https://apiserver.kube-service-catalog.svc/healthz"}
+
+マスターノード(ose3-master1)の/etc/resolve.confを下記ののように設定する。
+
+    search cluster.local
+    nameserver 127.0.0.1
+
+また、/etc/origin/node/resolv.confでDNSサーバのアドレスが設定されていることを確認する。
+
+   server=10.0.0.4
+
+マスターノード上で下記のcurlコマンドを叩いてokが返ればOK。
+
+    $ curl -k -L https://apiserver.kube-service-catalog.svc.cluster.local/healthz
+    ok
