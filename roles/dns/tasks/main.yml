@@ -9,10 +9,9 @@
     dest: /etc/hosts
 
 - name: Upstream DNS
-  lineinfile:
-    path: /etc/dnsmasq.d/upstream-dns.conf
-    line: "server={{ dns }}"
-    create: yes
+  template:
+    src: origin.conf.j2
+    dest: /etc/dnsmasq.d/origin.conf
 
 - name: Start dnsmasq
   service:
