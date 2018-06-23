@@ -101,6 +101,15 @@ C:\Windows\System32\drivers\etc\hosts
 
 https://openshift-ansible.public.example.com:8443にブラウザでアクセスする。ユーザadmin、パスワードsmartvmでログインし、アクセスできることを確認する。
 
+
+## サービスカタログのインストール(オプション)
+
+    search cluster.local
+    nameserver 127.0.0.1
+
+
+    $ ansible-playbook -i ../openshift-allinone-ansible/inventory/hosts.inventory playbooks/openshift-service-catalog/config.yml
+
 # 使い方
 
 masterノードにSSHでログインし、下記のコマンドでadminユーザ(パスワードadmin)を作成する。
@@ -266,3 +275,7 @@ dnsmasqサービスを再起動する。
 
     $ curl -k -L https://apiserver.kube-service-catalog.svc.cluster.local/healthz
     ok
+
+サービスカタログからインストールを続行するには、下記のコマンドを実行する
+
+    $ ansible-playbook -i ../openshift-allinone-ansible/inventory/hosts.inventory playbooks/openshift-service-catalog/config.yml
