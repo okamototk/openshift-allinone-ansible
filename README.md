@@ -50,27 +50,11 @@ openshift-ansibleを取得する
     # git clone https://github.com/openshift/openshift-ansible
 
 
-OpenShiftの構成を定義したhosts.inventryを作成する
+OpenShiftの構成を定義したhosts.inventoryを作成する
 
-### hosts.inventry
+### hosts.inventory
 
 ```
-[OSEv3:children]
-masters
-nodes
-etcd
-
-[OSEv3:vars]
-ansible_ssh_user=root
-
-product_type=openshift
-deployment_type=origin
-openshift_release=v3.7
-openshift_master_api_port=443
-openshift_master_console_port=443
-
-openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/openshift/openshift-passwd'}]
-
 [masters]
 ose3-master1
 
@@ -79,15 +63,67 @@ os-master1
 
 [nodes]
 os-master1 openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-os-node1   openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+ose3-node[1:2].test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 
+[nfs]
+ose3-master1.test.example.com
+
+[lb]
+ose3-lb.test.example.com
+
+[OSEv3:children]
+masters
+nodes
+etcd
+lb
+nfs
+
+[OSEv3:vars]
+# Ansibleを利用するユーザ
+ansible_user=okamototk
+
+# ansible_userにroot以外を設定した場合、設定
+ansible_become=yes
+
+# OpenShiftのバージョンを指定
+openshift_deployment_type=origin
+openshift_release=v3.9
+
+# アプリケーション・コンテナのドメイン
+openshift_master_default_subdomain=apps.test.example.com
+
+# Webコンソールのホスト名
+openshift_master_cluster_public_hostname=openshift-ansible.public.example.com
+
+# htpasswdでユーザを管理
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# 小さいサイズのVMなどで試す場合は、diskとmeomryチェックを無視
+openshift_disable_check=disk_availability,memory_availability
+
+# iptablesの代わりにfirewalldを利用
+os_firewall_use_firewalld=True
+
+# VXLANによりプロジェクト間のネットワークを隔離
+openshift_use_openshift_sdn=True
+
+# サービスカタログのインストールの無効化
+openshift_enable_service_catalog=false
+
+# デバッグレベル
+debug_level=2
 ```
 
 下記のコマンドでansibleを実行
 
-    # ansible-playbook -i inventory/hosts.myinventry playbooks/deploy_cluster.yml  -e openshift_disable_check=disk_availability,memory_availability
+### OpenShiftの事前条件のチェックとパッケージインストール
 
-小さいサイズのVMなどで試す場合は、diskとmeomryチェックを無視する設定を追加する。
+    # ansible-playbook -i inventory/hosts.myinventory playbooks/prerequisites.yml
+
+### OpenShiftのインストール
+
+    # ansible-playbook -i inventory/hosts.myinventory playbooks/deploy_cluster.yml 
+
 
 # 確認
 
@@ -104,11 +140,16 @@ https://openshift-ansible.public.example.com:8443にブラウザでアクセス�
 
 ## サービスカタログのインストール(オプション)
 
+masterノードのresolv.confを下記の通り変更
+
+### /etc/resolv.conf
+
     search cluster.local
     nameserver 127.0.0.1
 
+下記のコマンドでansibleを実行
 
-    $ ansible-playbook -i ../openshift-allinone-ansible/inventory/hosts.inventory playbooks/openshift-service-catalog/config.yml
+    $ ansible-playbook -i inventory/hosts.myinventory playbooks/openshift-service-catalog/config.yml
 
 # 使い方
 
