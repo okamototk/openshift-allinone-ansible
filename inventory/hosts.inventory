@@ -12,7 +12,7 @@ ose3-master1.test.example.com
 
 [nodes]
 ose3-master1.test.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
-ose3-node[1:2].test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
+ose3-node1.test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 
 [nfs]
 ose3-master1.test.example.com
@@ -29,8 +29,13 @@ lb
 nfs
 
 [OSEv3:vars]
-openshift_disable_check=disk_availability,docker_storage,memory_availability
+
+# Disable check disk and memory capacity for PoC
+openshift_disable_check=disk_availability,memory_availability
+
+# Use firewalld instead of iptables
 os_firewall_use_firewalld=True
+
 ###############################################################################
 # Common/ Required configuration variables follow                             #
 ###############################################################################
@@ -60,7 +65,7 @@ openshift_release=v3.9
 openshift_master_default_subdomain=apps.test.example.com
 
 #Set cluster_hostname to point at your load balancer
-openshift_master_cluster_hostname=ose3-lb.test.example.com
+# openshift_master_cluster_hostname=ose3-lb.test.example.com
 
 
 
@@ -362,7 +367,7 @@ openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 
 # openshift_master_cluster_hostname must resolve to the load balancer
 # or to one or all of the masters defined in the inventory if no load
 # balancer is present.
-openshift_master_cluster_hostname=openshift-ansible.test.example.com
+#openshift_master_cluster_hostname=openshift-ansible.test.example.com
 
 # If an external load balancer is used public hostname should resolve to
 # external load balancer address
