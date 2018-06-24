@@ -8,11 +8,11 @@
 #    src: upstream-dnsmasq.conf.j2
 #    dest: /etc/dnsmasq.d/upstream-dnsmasq.conf
 
-#- name: Upstream DNS
-#  lineinfile:
-#    path: /etc/dnsmasq.d/upstream-dns.conf
-#    line: "server={{ dns }}"
-#    create: yes
+- name: Upstream DNS
+  lineinfile:
+    path: /etc/dnsmasq.d/upstream-dns.conf
+    line: "server={{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}"
+    create: yes
 
 - name: Create /etc/origin/node
   file:
