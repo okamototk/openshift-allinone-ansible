@@ -151,6 +151,37 @@ masterノードのresolv.confを下記の通り変更
 
     $ ansible-playbook -i inventory/hosts.myinventory playbooks/openshift-service-catalog/config.yml
 
+### Loadbalancerへのルータの設定
+
+デフォルトでインストールされるロードバランサはWebConsole/APIのアクセスのみ負荷分散されるように設定されている。
+ロードバランサを利用してDNS名でOpenShiftのアプリケーションにアクセスできるように、ロードバランサノード(ose3-lb)の/etc/haproxy/haproxy.cfgに下記の設定を追加する。
+
+#### /etc/haproxy/haproxy.cfg
+
+    frontend  openshift-router-http
+        bind *:80
+        default_backend openshift-router-http
+        mode tcp
+        option tcplog
+    
+    backend openshift-router-http
+        balance source
+        mode tcp
+        server      master0 10.0.0.5:80 check
+        server      master1 10.0.0.6:80 check
+
+    frontend  openshift-router-https
+        bind *:443
+        default_backend openshift-router-https
+        mode tcp
+        option tcplog
+    
+    backend openshift-router-https
+        balance source
+        mode tcp
+        server      master0 10.0.0.5:80 check
+        server      master1 10.0.0.6:80 check
+
 # 使い方
 
 masterノードにSSHでログインし、下記のコマンドでadminユーザ(パスワードadmin)を作成する。
@@ -192,7 +223,14 @@ SpringBootのサンプルアプリケーションを作成する。
 
     # oc expose service springboot-sample-app --hostname=springboot-sample-app.your-openshift-installation.com
 
+ルータ経由でアクセスの動作確認を行う
 
+    # curl http://springboot-sample-app.your-openshift-installation.com
+
+エラー画面が表示されなければ、正しく動作している。
+
+
+     
 # トラブルシューティング
 
 
