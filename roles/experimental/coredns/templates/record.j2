@@ -1,0 +1,22 @@
+$TTL 1M
+$ORIGIN {{ openshift_master_default_subdomain }}.
+@       3600 IN SOA sns.dns.icann.org. noc.dns.icann.org. (
+                                20180607   ; serial
+                                7200       ; refresh (2 hours)
+                                1800       ; retry (0.5 hour)
+                                86400      ; expire (1 day)
+                                3600       ; minimum (1 hour)
+                                )
+
+{{ ansible_default_ipv4["address"] }} {{ ansible_fqdn }} {{ openshift_master_cl
+
+{% for h in groups['nodes'] %}
+{{ hostvars[h].ansible_eth0.ipv4.address }} {{ hostvars[h].ansible_hostname }}
+{% endfor %}
+
+
+openshift IN A 192.168.1.40
+master    IN A 192.168.1.40
+node1     IN A 192.168.1.41
+node2     IN A 192.168.1.42
+*.apps    IN CNAME master

@@ -1,0 +1,21 @@
+- name: Download CoreDNS tgz
+  get_url:
+    url: https://github.com/coredns/coredns/releases/download/v1.1.4/coredns_1.1.4_linux_amd64.tgz
+    dest: /tmp/coredns.tgz
+- name: Install CoreDNS
+  unarchive:
+    src: /tmp/coredns.tgz
+    dest: /usr/local/bin
+
+- name: Create CoreDNS config directory
+  file:
+    path: /etc/coredns
+    state: directory
+
+- template:
+    src: Corefile.j2
+    dest: /etc/coredns/Corefile
+
+- template:
+    src: record.j2
+    dest: /etc/coredns/{{ }}
