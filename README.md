@@ -140,13 +140,6 @@ https://openshift-ansible.public.example.com:8443にブラウザでアクセス�
 
 ## サービスカタログのインストール(オプション)
 
-masterノードのresolv.confを下記の通り変更
-
-### /etc/resolv.conf
-
-    search cluster.local
-    nameserver 127.0.0.1
-
 下記のコマンドでansibleを実行
 
     $ ansible-playbook -i inventory/hosts.myinventory playbooks/openshift-service-catalog/config.yml
@@ -155,6 +148,7 @@ masterノードのresolv.confを下記の通り変更
 
 デフォルトでインストールされるロードバランサはWebConsole/APIのアクセスのみ負荷分散されるように設定されている。
 ロードバランサを利用してDNS名でOpenShiftのアプリケーションにアクセスできるように、ロードバランサノード(ose3-lb)の/etc/haproxy/haproxy.cfgに下記の設定を追加する。
+(masterノードとinfraノードを兼用した設定の場合。infraノードを別で作成した場合はmaster0/master0のIPアドレスをインフラノードにすること)
 
 #### /etc/haproxy/haproxy.cfg
 
@@ -179,20 +173,86 @@ masterノードのresolv.confを下記の通り変更
     backend openshift-router-https
         balance source
         mode tcp
-        server      master0 10.0.0.5:80 check
-        server      master1 10.0.0.6:80 check
+        server      master0 10.0.0.5:443 check
+        server      master1 10.0.0.6:443 check
+
+# 動作確認
+
+### CLIの確認
+
+masterノードにログインし、下記のコマンドを実行する。
+
+```
+$ ssh ose3-master1
+$ oc get all
+
+[okamototk@ose3-master1 ~]$ oc get all
+NAME                                      REVISION   DESIRED   CURRENT   TRIGGERED BY
+deploymentconfigs/docker-registry         1          1         1         config
+deploymentconfigs/registry-console        1          1         1         config
+deploymentconfigs/router                  1          1         1         config
+
+NAME                                    DOCKER REPO                                                         TAGS      UPDATED
+imagestreams/registry-console           docker-registry.default.svc:5000/default/registry-console           latest    About an hour ago
+
+NAME                           HOST/PORT                                             PATH      SERVICES                PORT       TERMINATION   WILDCARD
+routes/docker-registry         docker-registry-default.apps.test.example.com                   docker-registry         <all>      passthrough   None
+routes/registry-console        registry-console-default.apps.test.example.com                  registry-console        <all>      passthrough   None
+
+NAME                               READY     STATUS      RESTARTS   AGE
+po/docker-registry-1-bfrh6         1/1       Running     0          1h
+po/registry-console-1-pbtzd        1/1       Running     0          1h
+po/router-1-7k79v                  1/1       Running     0          1h
+
+NAME                         DESIRED   CURRENT   READY     AGE
+rc/docker-registry-1         1         1         1         1h
+rc/registry-console-1        1         1         1         1h
+rc/router-1                  1         1         1         1h
+
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                   AGE
+svc/docker-registry         ClusterIP   172.30.220.47    <none>        5000/TCP                  1h
+svc/kubernetes              ClusterIP   172.30.0.1       <none>        443/TCP,53/UDP,53/TCP     1h
+svc/registry-console        ClusterIP   172.30.59.107    <none>        9000/TCP                  1h
+svc/router                  ClusterIP   172.30.186.26    <none>        80/TCP,443/TCP,1936/TCP   1h
+```
+
+failedなどが表示していると何かおかしい。ので、注意
+
+## GUIの確認
+
+hostsファイル(C:\Windows\System32\drivers\etc\hosts)を記載する。
+
+IPアドレスには、端末からlb(ose3-lb)にアクセスできるIPアドレスを指定し、Web Console、Registory Console, Docker Registoryにアクセスできるようにする。
+後で、Springのアプリへのアクセスなど試してみたければ、SpringのアプリのURLを追加する。
+Web ConsoleのDNS名はAnsibleのインベントリのopenshift_master_cluster_public_hostnameで指定した値を指定する。
+
+```
+23.96.15.7 openshift-ansible.public.example.com registry-console-default.apps.test.example.com  docker-registry-default.apps.test.example.com springboot-sample-app-default.apps.test.example.com 
+```
+
+下記のURLにブラウザからアクセスして画面が表示されることを確認する。Docker RegistryはWeb画面ではないので、空白のページが見れればよい。
+
+|---------------------------------------------------------|------------------------|
+| URL                                                     |説明                    |
+|---------------------------------------------------------|------------------------|
+| https://openshift-ansible.public.example.com:8443/      | OpenShift管理コンソール|
+|---------------------------------------------------------|------------------------|
+| https://registry-console-default.apps.test.example.com/ | Registryコンソール     |
+|---------------------------------------------------------|------------------------|
+| https://docker-registry-default.apps.test.example.com// | Docker Registry        |
+|---------------------------------------------------------|------------------------|
 
 # 使い方
 
-masterノードにSSHでログインし、下記のコマンドでadminユーザ(パスワードadmin)を作成する。
+masterノードにSSHでログインし、下記のコマンドでsysadminユーザ(パスワードadmin)を作成する。
 
-    # htpasswd -b /etc/openshift/openshift-passwd  admin admin
+    # htpasswd -b /etc/openshift/openshift-passwd  sysadmin admin
 
 adminユーザでログインする。
 
     # oc login
     Authentication required for https://os-master1.local:8443 (openshift)
-    Username: admin
+    Username: sysadmin
     Password: 
     Login successful.
 
