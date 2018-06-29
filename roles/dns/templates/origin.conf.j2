@@ -1,2 +1,1 @@
-server={{ dns }}
-address=/.{{ openshift_master_default_subdomain }}/{{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}
+server={{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}
