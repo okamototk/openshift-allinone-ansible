@@ -1,4 +1,3 @@
 {% for h in groups['dns'] %}
 server={{ hostvars[h].ansible_eth0.ipv4.address }}
 {% endif %}
-
