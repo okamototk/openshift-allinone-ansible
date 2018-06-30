@@ -12,6 +12,6 @@
 {% endfor %}
 
 {% for h in groups['lb'] %}
-{{ hostvars[h].ansible_eth0.ipv4.address }} {{ hostvars[h].ansible_hostname }} {{ hostvars[h].ansible_fqdn }}
+{{ hostvars[h].ansible_eth0.ipv4.address }} {{ hostvars[h].ansible_hostname }} {{ h }}
 {% endfor %}
 

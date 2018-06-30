@@ -50,7 +50,7 @@ openshift-ansibleを取得する
     # git clone https://github.com/openshift/openshift-ansible
 
 
-OpenShiftの構成を定義したhosts.inventoryを作成する
+OpenShiftの構成を定義したhosts.inventoryを作成する。OpenShiftオリジナルの設定に比べ、内部DNSを作成する[dns]ホストグループが追加されているので注意。
 
 ### hosts.inventory
 
@@ -70,6 +70,9 @@ ose3-master1.test.example.com
 
 [lb]
 ose3-lb.test.example.com
+
+[dns]
+ose3-dns1.test.example.com
 
 [OSEv3:children]
 masters
@@ -152,29 +155,29 @@ https://openshift-ansible.public.example.com:8443にブラウザでアクセス�
 
 #### /etc/haproxy/haproxy.cfg
 
-    frontend  openshift-router-http
-        bind *:80
-        default_backend openshift-router-http
-        mode tcp
-        option tcplog
+frontend  openshift-router-http
+    bind *:80
+    default_backend openshift-router-http
+    mode tcp
+    option tcplog
     
-    backend openshift-router-http
-        balance source
-        mode tcp
-        server      master0 10.0.0.5:80 check
-        server      master1 10.0.0.6:80 check
+backend openshift-router-http
+    balance source
+    mode tcp
+    server      master0 10.0.0.5:80 check
+    server      master1 10.0.0.6:80 check
 
-    frontend  openshift-router-https
-        bind *:443
-        default_backend openshift-router-https
-        mode tcp
-        option tcplog
+frontend  openshift-router-https
+    bind *:443
+    default_backend openshift-router-https
+    mode tcp
+    option tcplog
     
-    backend openshift-router-https
-        balance source
-        mode tcp
-        server      master0 10.0.0.5:443 check
-        server      master1 10.0.0.6:443 check
+backend openshift-router-https
+    balance source
+    mode tcp
+    server      master0 10.0.0.5:443 check
+    server      master1 10.0.0.6:443 check
 
 # 動作確認
 
@@ -323,22 +326,35 @@ Docker Resgistryへのpushに下記のメッセージと共に失敗する
     error: build error: Failed to push image: Get https://docker-registry.default.svc:5000/v1/_ping: dial tcp: lookup docker-registry.default.svc on 168.63.129.16:53: no such host
 
 
-masterノード上でpingを実行し、名前解決ができていることを確認する。
+masterノード上でpingを実行し、ローカルドメインとインターネットの名前解決ができていることを確認する。
 
     # ping docker-registry.default.svc
     PING docker-registry.default.svc.cluster.local (172.30.93.136) 56(84) bytes of data.
 
+    # ping registry.access.redhat.com
+    PING registry.access.redhat.com (209.132.182.63) 56(84) bytes of data.
+    64 bytes from registry.redhat.io.182.132.209.in-addr.arpa (209.132.182.63): icmp_seq=1 ttl=235 time=136 ms
+
 名前解決ができていなければ、
 
-/etc/dnsmasq.d/external-dns.confに127.0.0.1が設定されていることと、
-
-    server=127.0.0.1
-    server=8.8.8.8
-
-/etc/resolve.confでcluster.localをDNSの検索対象に入っていることを確認する。
+/etc/resolve.confに自ホストのIPアドレスをネームサーバに指定し、 cluster.localをDNSの検索対象に入っていること
 
     search cluster.local
     nameserver 192.168.1.151
+
+/etc/origin/node/node-dnsmasq.confに何も設定されていいないこと
+
+/etc/dnsmasq.d/node-dnsmasq.confに下記の設定がされていること
+
+    server=/in-addr.arpa/127.0.0.1
+    server=/cluster.local/127.0.0.1
+
+/etc/dnsmasq.d/origin-upstream-dns.confに内部DNSサーバのアドレスが設定されていること。
+
+server=192.168.1.192
+
+を確認する。
+
 
 
 ## Docker Registryへのpushに失敗する(2)
