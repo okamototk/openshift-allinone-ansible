@@ -1,18 +1,23 @@
-#- name: Install dnsmasq
-#  yum:
-#    name: dnsmasq
-#    state: latest
-
-#- name: dnsmasq config
-#  template:
-#    src: upstream-dnsmasq.conf.j2
-#    dest: /etc/dnsmasq.d/upstream-dnsmasq.conf
+- name: Install dnsmasq
+  yum:
+    name: dnsmasq
+    state: latest
 
 - name: Upstream DNS
-  lineinfile:
-    path: /etc/dnsmasq.d/upstream-dns.conf
-    line: "server={{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}"
-    create: yes
+  template:
+    src: origin-upstream-dns.conf.j2
+    dest: /etc/dnsmasq.d/origin-upstream-dns.conf
+
+- name: SkyDNS for OpenShift internal hostname
+  template:
+    src: node-dnsmasq.conf.j2
+    dest: /etc/dnsmasq.d/node-dnsmasq.conf
+
+#- name: Upstream DNS
+#  lineinfile:
+#    path: /etc/dnsmasq.d/origin-upstream-dns.conf
+#    line: "server={{ hostvars[groups['lb'][0]].ansible_eth0.ipv4.address }}"
+#    create: yes
 
 - name: Create /etc/origin/node
   file:
@@ -25,8 +30,13 @@
     src: origin-resolv.conf.j2
     dest: /etc/origin/node/resolv.conf
 
-#- name: Restart dnsmasq
-#  service:
-#    name: dnsmasq
-#    state: restarted
-#    enabled: yes
+- name: Update resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Restart dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+    enabled: yes

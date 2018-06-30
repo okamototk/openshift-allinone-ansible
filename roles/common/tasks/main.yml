@@ -28,7 +28,4 @@
     baseurl: http://mirror.centos.org/centos/7/paas/x86_64/openshift-origin/
     gpgcheck: no
 
-- name: Update resolv.conf
-  template:
-    src: resolv.conf.j2
-    dest: /etc/resolv.conf
+

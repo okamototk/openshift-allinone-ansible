@@ -1,0 +1,27 @@
+- name: Config LB resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Allow https port
+  firewalld:
+    service: https
+    state: enabled
+    permanent: yes
+
+- name: Allow http port
+  firewalld:
+    service: http
+    state: enabled
+    permanent: yes
+
+- name: Allow API 8843 port
+  firewalld:
+    port: 8443/tcp
+    state: enabled
+    permanent: yes
+
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted

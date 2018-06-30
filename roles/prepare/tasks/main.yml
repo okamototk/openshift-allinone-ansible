@@ -1,0 +1,11 @@
+- name: Set hostname
+  shell: |
+    /usr/bin/hostnamectl set-hostname --static "{{ inventory_hostname }}"
+
+- name: Reload facts
+  setup:
+
+- name: Set DNS
+  lineinfile:
+    path: /etc/resolv.conf
+    line: "nameserver {{ dns }}"

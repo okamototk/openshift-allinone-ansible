@@ -1,27 +1,34 @@
 - name: all
-  hosts: masters:nodes:etcd:lb:nfs
+  hosts: masters:nodes:etcd:lb:nfs:dns
+  roles:
+  - prepare
 
-- name: docker host
+- name: Docker host configuration
   hosts: masters:nodes
   roles:
   - os
 
-- name: dns
-  hosts: lb
+- name: Install DNS
+  hosts: dns
   roles:
   - dns
 
-- name: docker host
+- name: Node DNS configuration
   hosts: masters:nodes
   roles:
   - node-dns
 
-- name: all
-  hosts: masters:nodes:etcd:lb:nfs
+- name: LB DNS configuration
+  hosts: lb
+  roles:
+  - lb-dns
+
+- name: Prepare common configuration
+  hosts: masters:nodes:etcd:lb:nfs:dns
   roles:
   - common
 
-- name: docker host
+- name: Install Docker
   hosts: masters:nodes
   roles:
   - docker

@@ -45,10 +45,6 @@
     replace: 'Provisioning.MonitorHostName=n'
   when: ansible_system_vendor == "Microsoft Corporation"
 
-- name: Set hostname
-  shell: |
-    /usr/bin/hostnamectl set-hostname --static "{{ inventory_hostname }}"
-
 - name: Add hosts file
   template:
     src: hosts.j2

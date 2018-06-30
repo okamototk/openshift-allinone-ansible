@@ -8,10 +8,15 @@
     src: hosts.j2
     dest: /etc/hosts
 
+- name: Update resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+
 - name: Upstream DNS
   template:
-    src: origin.conf.j2
-    dest: /etc/dnsmasq.d/origin.conf
+    src: upstream-dns.conf.j2
+    dest: /etc/dnsmasq.d/upstream-dns.conf
 
 - name: Start dnsmasq
   service:
@@ -35,7 +40,7 @@
     state: enabled
     permanent: yes
 
-#- name: Restart firewalld
-#  service:
-#    name: firewalld
-#    state: restarted
+- name: Restart firewalld
+  service:
+    name: firewalld
+    state: restarted

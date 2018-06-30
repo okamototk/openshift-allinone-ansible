@@ -4,6 +4,9 @@
 # balance traffic to the API servers. For a truly production environment you
 # should use an external load balancing solution that itself is highly available.
 
+[dns]
+ose3-dns1.test.example.com
+
 [masters]
 ose3-master1.test.example.com
 
@@ -15,7 +18,7 @@ ose3-master1.test.example.com openshift_node_labels="{'region': 'infra', 'zone':
 ose3-node1.test.example.com openshift_node_labels="{'region': 'primary', 'zone': 'default'}"
 
 [nfs]
-ose3-master1.test.example.com
+ose3-dns1.test.example.com
 
 [lb]
 ose3-lb.test.example.com
